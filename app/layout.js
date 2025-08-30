@@ -4,7 +4,7 @@ import { ThemeProvider } from "next-themes";
 import Header from "@/components/header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
-import ThemeToggle from "@/components/theme-toggle"
+// import ThemeToggle from "@/components/theme-toggle"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
         <main>{children}</main>
         <Toaster/>
          <div className="fixed bottom-4 right-4 z-50">
-    <ThemeToggle suppressHydrationWarning />
+    {/* <ThemeToggle suppressHydrationWarning /> */}
   </div>
         <footer className=" fixed bottom-0 w-full bg-muted/50 py-2 ">
           <div className="container mx-auto px-6 text-center text-gray-300">
