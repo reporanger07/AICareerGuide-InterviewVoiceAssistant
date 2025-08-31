@@ -1,7 +1,7 @@
 import React from "react";
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Button } from "./ui/button";
-import { ChevronDown, FileText, GraduationCap, LayoutDashboard } from "lucide-react";
+import { ChevronDown, FileText, GraduationCap, LayoutDashboard,LayoutTemplate } from "lucide-react";
 import Link from "next/link";
 import { 
   DropdownMenu,   DropdownMenuContent,
@@ -40,6 +40,15 @@ const Header = async () => {
               <DropdownMenuContent>
                 <DropdownMenuLabel>Tools & Resources</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+
+
+                <DropdownMenuItem asChild>
+                  <Link href='/dashboard' className="flex items-center gap-2 w-full">
+                    <LayoutTemplate className="h-4 w-4"/>
+                    dashboard
+                  </Link>
+                </DropdownMenuItem>
+
                 <DropdownMenuItem asChild>
                   <Link href='/resume' className="flex items-center gap-2 w-full">
                     <FileText className="h-4 w-4"/>
@@ -52,6 +61,7 @@ const Header = async () => {
                     Interview Prep
                   </Link>
                 </DropdownMenuItem>
+                
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Subscription</DropdownMenuItem>
               </DropdownMenuContent>
