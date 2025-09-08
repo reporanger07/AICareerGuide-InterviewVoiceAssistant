@@ -18,7 +18,7 @@ const Header = async () => {
     <header className="fixed top-0 w-full border bg-background/80 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href='/'>
-          <span className="h-12 py-1 w-auto object-contain">Ai-career-coach</span>
+          <span className="h-12 py-1 w-auto object-contain">CareerGuideAi</span>
         </Link>
 
         <div className="flex items-center space-x-2">

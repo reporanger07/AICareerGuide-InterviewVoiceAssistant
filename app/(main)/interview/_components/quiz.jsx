@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { saveQuizResult } from "@/actions/interview";
 import { toast } from "sonner";
+import QuizResult from "./quiz-result";
 
 const Quiz = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
