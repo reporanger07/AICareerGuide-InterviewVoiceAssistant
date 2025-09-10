@@ -1,43 +1,33 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-  Download,
-  Save,
-  Edit,
-  Loader2,
-  Monitor,
-  AlertTriangle,
-  lo,
-} from "lucide-react";
-import { toast } from "sonner";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useFetch from "@/hooks/use-fetch";
 import { saveResume } from "@/actions/resume";
+import { toast } from "sonner";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { resumeSchema } from "@/app/lib/schema";
-import { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import EntryForm from "./entry-form";
 import { entriesToMarkdown } from "@/app/lib/helper";
 import { useUser } from "@clerk/nextjs";
 import MDEditor from "@uiw/react-md-editor";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { resumeSchema } from "@/app/lib/schema";
 
 import {
-  pdf,
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  Link,
-} from "@react-pdf/renderer";
-//import dynamic from "next/dynamic";
-//const html2pdf = dynamic(() => import("html2pdf.js"), { ssr: false });
+  Button,
+  Download,
+  Save,
+  Edit,
+  Loader2,
+  Monitor,
+  AlertTriangle,
+} from "@/components/ui/button";
+
+import { pdf, Document, Page, Text, View, StyleSheet, Link } from "@react-pdf/renderer";
+
 
 const ResumeBuilder = ({ initialContent }) => {
   const [activeTab, setActiveTab] = useState("edit");
