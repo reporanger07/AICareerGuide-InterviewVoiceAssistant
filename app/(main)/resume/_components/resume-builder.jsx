@@ -914,7 +914,7 @@ const ResumeBuilder = ({ initialContent }) => {
 
         <div className="space-x-2">
           <Button
-            typr="submit"
+            type="submit"
             onClick={handleSubmit(onSubmit)} // ✅ This works directly
             disabled={isSaving}
           >
