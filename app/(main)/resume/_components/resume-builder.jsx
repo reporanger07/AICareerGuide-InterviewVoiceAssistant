@@ -16,15 +16,9 @@ import MDEditor from "@uiw/react-md-editor";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { resumeSchema } from "@/app/lib/schema";
 
-import {
-  Button,
-  Download,
-  Save,
-  Edit,
-  Loader2,
-  Monitor,
-  AlertTriangle,
-} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Download, Save, Edit, Loader2, Monitor, AlertTriangle } from "lucide-react";
+
 
 import { pdf, Document, Page, Text, View, StyleSheet, Link } from "@react-pdf/renderer";
 
