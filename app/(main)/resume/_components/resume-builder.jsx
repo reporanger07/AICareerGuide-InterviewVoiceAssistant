@@ -23,7 +23,8 @@ import { resumeSchema } from "@/app/lib/schema";
 import { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {ResumeEntryForm} from "./entry-form";
+import { ResumeEntryForm } from "./entry-form";
+
 import { entriesToMarkdown } from "@/app/lib/helper";
 import { useUser } from "@clerk/nextjs";
 import MDEditor from "@uiw/react-md-editor";
