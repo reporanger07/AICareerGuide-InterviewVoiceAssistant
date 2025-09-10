@@ -7,8 +7,7 @@ import {
   Loader2,
   Monitor,
   AlertTriangle,
-
-  
+  lo,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,7 +22,7 @@ import { resumeSchema } from "@/app/lib/schema";
 import { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ResumeEntryForm } from "./entry-form";
+import { EntryForm } from "./entry-form.jsx";
 
 import { entriesToMarkdown } from "@/app/lib/helper";
 import { useUser } from "@clerk/nextjs";
@@ -479,7 +478,7 @@ const ResumeBuilder = ({ initialContent }) => {
                 name="experience"
                 control={control}
                 render={({ field }) => (
-                  <ResumeEntryForm
+                  <EntryForm
                     type="Experience"
                     entries={field.value}
                     onChange={field.onChange}
@@ -499,7 +498,7 @@ const ResumeBuilder = ({ initialContent }) => {
                 name="education"
                 control={control}
                 render={({ field }) => (
-                  <ResumeEntryForm
+                  <EntryForm
                     type="Education"
                     entries={field.value}
                     onChange={field.onChange}
@@ -519,7 +518,7 @@ const ResumeBuilder = ({ initialContent }) => {
                 name="projects"
                 control={control}
                 render={({ field }) => (
-                  <ResumeEntryForm
+                  <EntryForm
                     type="Project"
                     entries={field.value}
                     onChange={field.onChange}
