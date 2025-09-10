@@ -34,7 +34,7 @@ const formatDisplayDate = (dateString) => {
 };
 
 
-const EntryForm = ({ type, entries, onChange }) => {
+export function EntryForm({ type, entries, onChange }) {
   const [isAdding, setIsAdding] = useState(false);
   const {
     register,
@@ -297,4 +297,4 @@ const EntryForm = ({ type, entries, onChange }) => {
   );
 };
 
-export default EntryForm;
+
