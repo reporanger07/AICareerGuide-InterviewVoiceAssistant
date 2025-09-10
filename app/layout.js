@@ -23,34 +23,32 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider >
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {/* ✅ ClerkProvider must wrap inside <body>, not around <html> */}
+        <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
           <ThemeProvider
-         
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-        <Header/>
-        <main>{children}</main>
-        <Toaster/>
-         <div className="fixed bottom-4 right-4 z-50">
-    {/* <ThemeToggle suppressHydrationWarning /> */}
-  </div>
-        <footer className=" fixed bottom-0 w-full bg-muted/50 py-2 ">
-          <div className="container mx-auto px-6 text-center text-gray-300">
-            <p>
-              All rights reserved
-            </p>
-          </div>
-        </footer>
-        </ThemeProvider >
+            <Header />
+            <main>{children}</main>
+            <Toaster />
+
+            <div className="fixed bottom-4 right-4 z-50">
+              {/* <ThemeToggle suppressHydrationWarning /> */}
+            </div>
+
+            <footer className="fixed bottom-0 w-full bg-muted/50 py-2 ">
+              <div className="container mx-auto px-6 text-center text-gray-300">
+                <p>All rights reserved</p>
+              </div>
+            </footer>
+          </ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
-    </ClerkProvider>
   );
 }
