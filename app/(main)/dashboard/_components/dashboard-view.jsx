@@ -20,7 +20,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 
-const dashboardView = ({ insights }) => {
+const DashboardView = ({ insights }) => {
   const salaryData = insights.salaryRanges.map((range) => ({
     name: range.role,
     min: range.min / 1000,
@@ -168,4 +168,4 @@ const dashboardView = ({ insights }) => {
   </div>;
 };
 
-export default dashboardView;
+export default DashboardView;
