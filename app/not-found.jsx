@@ -1,18 +1,14 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+// app/_not-found.jsx
+import React from "react";
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[100vh] px-4 text-center">
-      <h1 className="text-6xl font-bold gradient-title mb-4">404</h1>
-      <h2 className="text-2xl font-semibold mb-4">Page Not Found</h2>
-      <p className="text-gray-600 mb-8">
-        Oops! The page you&apos;re looking for doesn&apos;t exist or has been
-        moved.
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", textAlign: "center", padding: "1rem" }}>
+      <h1 style={{ fontSize: "6rem", fontWeight: "bold", marginBottom: "1rem" }}>404</h1>
+      <h2 style={{ fontSize: "2rem", fontWeight: "600", marginBottom: "1rem" }}>Page Not Found</h2>
+      <p style={{ color: "#666" }}>
+        Oops! The page you&apos;re looking for doesn&apos;t exist.
       </p>
-      <Link href="/">
-        <Button>Return Home</Button>
-      </Link>
     </div>
   );
 }
