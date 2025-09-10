@@ -1,24 +1,28 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import useFetch from "@/hooks/use-fetch";
-import { saveResume } from "@/actions/resume";
-import { toast } from "sonner";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import EntryForm from "./entry-form";
-import { entriesToMarkdown } from "@/app/lib/helper";
-import { useUser } from "@clerk/nextjs";
-import MDEditor from "@uiw/react-md-editor";
+import { useState, useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { resumeSchema } from "@/app/lib/schema";
-
+import {
+  AlertTriangle,
+  Download,
+  Edit,
+  Loader2,
+  Monitor,
+  Save,
+} from "lucide-react";
+import { toast } from "sonner";
+import MDEditor from "@uiw/react-md-editor";
 import { Button } from "@/components/ui/button";
-import { Download, Save, Edit, Loader2, Monitor, AlertTriangle } from "lucide-react";
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { saveResume } from "@/actions/resume";
+import { EntryForm } from "./entry-form";
+import useFetch from "@/hooks/use-fetch";
+import { useUser } from "@clerk/nextjs";
+import { entriesToMarkdown } from "@/app/lib/helper";
+import { resumeSchema } from "@/app/lib/schema";
 
 import { pdf, Document, Page, Text, View, StyleSheet, Link } from "@react-pdf/renderer";
 
