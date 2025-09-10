@@ -1,31 +1,43 @@
 "use client";
-
-import { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
 import {
-  AlertTriangle,
   Download,
+  Save,
   Edit,
   Loader2,
   Monitor,
-  Save,
+  AlertTriangle,
+  lo,
 } from "lucide-react";
 import { toast } from "sonner";
-import MDEditor from "@uiw/react-md-editor";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { saveResume } from "@/actions/resume";
-import { EntryForm } from "./entry-form";
+
+import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import useFetch from "@/hooks/use-fetch";
-import { useUser } from "@clerk/nextjs";
-import { entriesToMarkdown } from "@/app/lib/helper";
+import { saveResume } from "@/actions/resume";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { resumeSchema } from "@/app/lib/schema";
+import { useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {ResumeEntryForm} from "./entry-form";
+import { entriesToMarkdown } from "@/app/lib/helper";
+import { useUser } from "@clerk/nextjs";
+import MDEditor from "@uiw/react-md-editor";
 
-import { pdf, Document, Page, Text, View, StyleSheet, Link } from "@react-pdf/renderer";
-
+import {
+  pdf,
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  Link,
+} from "@react-pdf/renderer";
+//import dynamic from "next/dynamic";
+//const html2pdf = dynamic(() => import("html2pdf.js"), { ssr: false });
 
 const ResumeBuilder = ({ initialContent }) => {
   const [activeTab, setActiveTab] = useState("edit");
@@ -465,7 +477,7 @@ const ResumeBuilder = ({ initialContent }) => {
                 name="experience"
                 control={control}
                 render={({ field }) => (
-                  <EntryForm
+                  <ResumeEntryForm
                     type="Experience"
                     entries={field.value}
                     onChange={field.onChange}
@@ -485,7 +497,7 @@ const ResumeBuilder = ({ initialContent }) => {
                 name="education"
                 control={control}
                 render={({ field }) => (
-                  <EntryForm
+                  <ResumeEntryForm
                     type="Education"
                     entries={field.value}
                     onChange={field.onChange}
@@ -505,7 +517,7 @@ const ResumeBuilder = ({ initialContent }) => {
                 name="projects"
                 control={control}
                 render={({ field }) => (
-                  <EntryForm
+                  <ResumeEntryForm
                     type="Project"
                     entries={field.value}
                     onChange={field.onChange}
