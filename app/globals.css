@@ -133,3 +133,9 @@
     --foreground: 0 0% 100%;   /* Dark text (white) */
   }
 }
+
+/* globals.css */
+#resume-pdf * {
+  color: black !important;
+  background-color: white !important;
+}

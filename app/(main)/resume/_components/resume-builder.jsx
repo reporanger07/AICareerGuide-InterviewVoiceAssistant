@@ -1,6 +1,16 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Download, Save ,Edit, Loader2,Monitor,AlertTriangle,lo} from "lucide-react";
+import {
+  Download,
+  Save,
+  Edit,
+  Loader2,
+  Monitor,
+  AlertTriangle,
+  lo,
+} from "lucide-react";
+import { toast } from "sonner";
+
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useFetch from "@/hooks/use-fetch";
@@ -16,18 +26,26 @@ import EntryForm from "./entry-form";
 import { entriesToMarkdown } from "@/app/lib/helper";
 import { useUser } from "@clerk/nextjs";
 import MDEditor from "@uiw/react-md-editor";
-import html2pdf from "html2pdf.js";
+
+import {
+  pdf,
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  Link,
+} from "@react-pdf/renderer";
 //import dynamic from "next/dynamic";
 //const html2pdf = dynamic(() => import("html2pdf.js"), { ssr: false });
 
-
 const ResumeBuilder = ({ initialContent }) => {
   const [activeTab, setActiveTab] = useState("edit");
-  const [resumeMode,setResumeMode]=useState("preview")
-  const[previewContent,setPreviewContent]=useState(initialContent);
+  const [resumeMode, setResumeMode] = useState("preview");
+  const [previewContent, setPreviewContent] = useState(initialContent);
 
   const [isGenerating, setIsGenerating] = useState(false);
-  const {user}=useUser();
+  const { user } = useUser();
   const {
     control,
     register,
@@ -62,12 +80,10 @@ const ResumeBuilder = ({ initialContent }) => {
     if (activeTab === "edit") {
       const newContent = getCombinedContent();
       setPreviewContent(newContent ? newContent : initialContent);
-
     }
   }, [formValues, activeTab]);
 
-
-   const getContactMarkdown = () => {
+  const getContactMarkdown = () => {
     const { contactInfo } = formValues;
     const parts = [];
     if (contactInfo.email) parts.push(`📧 ${contactInfo.email}`);
@@ -95,67 +111,210 @@ const ResumeBuilder = ({ initialContent }) => {
       .filter(Boolean)
       .join("\n\n");
   };
+   useEffect(() => {
+    if (saveResult && !isSaving) {
+      toast.success("Resume saved successfully!");
+    }
+    if (saveError) {
+      toast.error(saveError.message || "Failed to save resume");
+    }
+  }, [saveResult, saveError, isSaving]);
+
+const onSubmit = async (data) => {
+    try {
+      console.log("button clicked")
+      const formattedContent = previewContent
+        .replace(/\n/g, "\n") // Normalize newlines
+        .replace(/\n\s*\n/g, "\n\n") // Normalize multiple newlines to double newlines
+        .trim();
+
+      console.log(previewContent, formattedContent);
+      await saveResumeFn(previewContent);
+    } catch (error) {
+      console.error("Save error:", error);
+    }
+  };
+
+
+  // register font once at top
 
 const generatePDF = async () => {
     setIsGenerating(true);
     try {
+      const styles = StyleSheet.create({
+        page: {
+          padding: 30,
+          fontSize: 11,
+          lineHeight: 1.5,
+          fontFamily: "Helvetica",
+        },
+        header: { textAlign: "center", marginBottom: 15 },
+        name: { fontSize: 20, fontWeight: "bold", marginBottom: 4 },
+        contact: { fontSize: 10, color: "#444" },
+        section: { marginTop: 12 },
+        sectionTitle: {
+          fontSize: 13,
+          fontWeight: "bold",
+          marginBottom: 6,
+          borderBottom: "1pt solid #aaa",
+          paddingBottom: 2,
+        },
+        itemTitle: { fontSize: 11, fontWeight: "bold" },
+        itemDate: { fontSize: 9, color: "gray", marginBottom: 2 },
+        itemDesc: { fontSize: 10 },
+      });
 
-         // Dynamically import html2pdf only on client side
-    const html2pdfModule = await import("html2pdf.js");
-    const html2pdf = html2pdfModule.default;
+      const data = formValues;
 
-    
-      const element = document.getElementById("resume-pdf");
-      const opt = {
-        margin: [15, 15],
-        filename: "resume.pdf",
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      };
+      const doc = (
+        <Document>
+          <Page size="A4" style={styles.page}>
+            {/* Header */}
+            <View style={styles.header}>
+              <Text style={styles.name}>{user?.fullName}</Text>
 
-      await html2pdf().set(opt).from(element).save();
-    } catch (error) {
-      console.error("PDF generation error:", error);
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  flexWrap: "wrap",
+                }}
+              >
+                {data.contactInfo?.email && (
+                  <Text>{data.contactInfo.email}</Text>
+                )}
+                {data.contactInfo?.mobile && (
+                  <Text> | {data.contactInfo.mobile}</Text>
+                )}
+                {data.contactInfo?.linkedin && (
+                  <Text>
+                    {" "}
+                    | <Link src={data.contactInfo.linkedin}>LinkedIn</Link>
+                  </Text>
+                )}
+                {data.contactInfo?.github && (
+                  <Text>
+                    {" "}
+                    | <Link src={data.contactInfo.github}>GitHub</Link>
+                  </Text>
+                )}
+              </View>
+            </View>
+
+            {/* Summary */}
+            {data.summary && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Professional Summary</Text>
+                <Text>{data.summary}</Text>
+              </View>
+            )}
+
+            {/* Skills */}
+            {data.skills && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Skills</Text>
+                <Text>{data.skills}</Text>
+              </View>
+            )}
+
+            {/* Work Experience */}
+            {data.experience?.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Work Experience</Text>
+                {data.experience.map((exp, i) => (
+                  <View key={i} style={{ marginBottom: 8 }}>
+                    <Text style={styles.itemTitle}>
+                      {exp.title} @ {exp.company}
+                    </Text>
+                    <Text style={styles.itemDate}>
+                      {exp.startDate} – {exp.endDate || "Present"}
+                    </Text>
+                    <Text style={styles.itemDesc}>{exp.description}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {/* Education */}
+            {data.education?.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Education</Text>
+                {data.education.map((edu, i) => (
+                  <View key={i} style={{ marginBottom: 8 }}>
+                    <Text style={styles.itemTitle}>{edu.degree}</Text>
+                    <Text style={styles.itemDate}>
+                      {edu.institution} | {edu.startDate} – {edu.endDate}
+                    </Text>
+                    <Text style={styles.itemDesc}>{edu.description}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {/* Projects */}
+            {data.projects?.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Projects</Text>
+                {data.projects.map((proj, i) => (
+                  <View key={i} style={{ marginBottom: 8 }}>
+                    <Text style={styles.itemTitle}>{proj.name}</Text>
+                    <Text style={styles.itemDate}>{proj.technologies}</Text>
+                    <Text style={styles.itemDesc}>{proj.description}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+          </Page>
+        </Document>
+      );
+
+      // download
+      const blob = await pdf(doc).toBlob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "resume.pdf";
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("PDF generation error:", err);
     } finally {
       setIsGenerating(false);
     }
   };
 
-//   const generatePDF = async () => {
-//   if (typeof window === "undefined") return; // prevent SSR errors
-//   setIsGenerating(true);
+  //   const generatePDF = async () => {
+  //   if (typeof window === "undefined") return; // prevent SSR errors
+  //   setIsGenerating(true);
 
-//   try {
+  //   try {
 
-//     const html2pdfModule = await import("html2pdf.js");
-//     const html2pdf = html2pdfModule.default;
+  //     const html2pdfModule = await import("html2pdf.js");
+  //     const html2pdf = html2pdfModule.default;
 
+  //     const element = document.getElementById("resume-pdf");
 
-    
-//     const element = document.getElementById("resume-pdf");
+  //     if (!element) {
+  //       console.error(" Resume element not found!");
+  //       setIsGenerating(false);
+  //       return;
+  //     }
 
-//     if (!element) {
-//       console.error(" Resume element not found!");
-//       setIsGenerating(false);
-//       return;
-//     }
+  //     const opt = {
+  //       margin: [15, 15],
+  //       filename: "resume.pdf",
+  //       image: { type: "jpeg", quality: 0.98 },
+  //       html2canvas: { scale: 2 },
+  //       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+  //     };
 
-//     const opt = {
-//       margin: [15, 15],
-//       filename: "resume.pdf",
-//       image: { type: "jpeg", quality: 0.98 },
-//       html2canvas: { scale: 2 },
-//       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-//     };
-
-//     await html2pdf().set(opt).from(element).save();
-//   } catch (error) {
-//     console.error("PDF generation error:", error);
-//   } finally {
-//     setIsGenerating(false);
-//   }
-// };
+  //     await html2pdf().set(opt).from(element).save();
+  //   } catch (error) {
+  //     console.error("PDF generation error:", error);
+  //   } finally {
+  //     setIsGenerating(false);
+  //   }
+  // };
 
   return (
     <div className="space-y-4">
@@ -163,9 +322,22 @@ const generatePDF = async () => {
         <h1 className="text-6xl font-bold gradient-title">Resume Builder</h1>
 
         <div className="space-x-2">
-          <Button>
-            <Save className=" h-4 w-4" />
-            Save
+           <Button
+  onClick={handleSubmit(onSubmit)} // ✅ This works directly
+  disabled={isSaving}
+>
+            
+            {isSaving ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="h-4 w-4" />
+                Save
+              </>
+            )}
           </Button>
 
           <Button onClick={generatePDF} disabled={isGenerating}>
@@ -190,7 +362,7 @@ const generatePDF = async () => {
           <TabsTrigger value="preview">Preview</TabsTrigger>
         </TabsList>
         <TabsContent value="edit">
-          <form className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Contact Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg bg-muted/50">
@@ -363,27 +535,26 @@ const generatePDF = async () => {
         </TabsContent>
         <TabsContent value="preview">
           <Button
-              variant="link"
-              type="button"
-              className="mb-2"
-              onClick={() =>
-                setResumeMode(resumeMode === "preview" ? "edit" : "preview")
-              }
-            >
-              {resumeMode === "preview" ? (
-                <>
-                  <Edit className="h-4 w-4" />
-                  Edit Resume
-                </>
-              ) : (
-                <>
-                  <Monitor className="h-4 w-4" />
-                  Show Preview
-                </>
-              )}
-            </Button>
+            variant="link"
+            type="button"
+            className="mb-2"
+            onClick={() =>
+              setResumeMode(resumeMode === "preview" ? "edit" : "preview")
+            }
+          >
+            {resumeMode === "preview" ? (
+              <>
+                <Edit className="h-4 w-4" />
+                Edit Resume
+              </>
+            ) : (
+              <>
+                <Monitor className="h-4 w-4" />
+                Show Preview
+              </>
+            )}
+          </Button>
 
-              
           {resumeMode !== "preview" && (
             <div className="flex p-3 gap-2 items-center border-2 border-yellow-600 text-yellow-600 rounded mb-2">
               <AlertTriangle className="h-5 w-5" />
@@ -400,9 +571,9 @@ const generatePDF = async () => {
               height={800}
               preview={resumeMode}
             />
-            </div>
+          </div>
 
-            <div className="hidden">
+          <div className="hidden">
             <div id="resume-pdf">
               <MDEditor.Markdown
                 source={previewContent}
@@ -413,7 +584,6 @@ const generatePDF = async () => {
               />
             </div>
           </div>
-
         </TabsContent>
       </Tabs>
     </div>
