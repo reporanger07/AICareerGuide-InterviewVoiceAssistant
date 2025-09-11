@@ -88,29 +88,18 @@ model CoverLetter {
 
 
 model IndustryInsight {
-  id            String    @id @default(cuid())
-  industry      String    @unique  // The industry this data belongs to (e.g., "tech-software-development")
-  
-  // Users in this industry
-  users         User[]
-  
-  // Salary data
-  salaryRanges  Json[]    // Array of { role: string, min: float, max: float, median: float, location: string? }
-  
-  // Industry trends
-  growthRate    Float     // Industry growth rate
-  demandLevel   String    // "High", "Medium", "Low"
-  topSkills     String[]  // Most in-demand skills
-  
-  // Market conditions
-  marketOutlook String    // "Positive", "Neutral", "Negative"
-  keyTrends     String[]  // Array of current industry trends
-  
-  // Learning suggestions
-  recommendedSkills String[]  // Skills recommended for the industry
-  
-  lastUpdated   DateTime  @default(now())
-  nextUpdate    DateTime  // Scheduled update time
+  id               String         @id @default(cuid())
+  industry         String         @unique
+  users            User[]
+  salaryRanges     Json[]
+  growthRate       Float
+  demandLevel      DemandLevel    @default(MEDIUM)
+  topSkills        String[]
+  marketOutlook    MarketOutlook  @default(NEUTRAL)
+  keyTrends        String[]
+  recommendedSkills String[]
+  lastUpdated      DateTime       @default(now())
+  nextUpdate       DateTime
 
   @@index([industry])
 }
