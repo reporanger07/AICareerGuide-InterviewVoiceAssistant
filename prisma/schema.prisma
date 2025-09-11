@@ -83,6 +83,12 @@ model CoverLetter {
  @@index([userId])
 }
 
+
+
+WARN! Exceeded query duration limit of 5 minutes
+
+PS C:\Users\Abdul Samad>
+
 model IndustryInsight {
   id            String    @id @default(cuid())
   industry      String    @unique  // The industry this data belongs to (e.g., "tech-software-development")
@@ -109,4 +115,16 @@ model IndustryInsight {
   nextUpdate    DateTime  // Scheduled update time
 
   @@index([industry])
+}
+
+enum DemandLevel {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum MarketOutlook {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
 }
