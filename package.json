@@ -2,13 +2,13 @@
   "name": "ai-career-coach-3",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "cross-env NODE_OPTIONS=--inspect next dev --turbopack",
-    "build": "prisma generate && next build --turbopack",
-
-    "start": "next start",
-    "lint": "eslint"
-  },
+ "scripts": {
+  "dev": "cross-env NODE_OPTIONS=--inspect next dev --turbopack",
+  "build": "next build --turbopack",
+  "start": "next start",
+  "lint": "eslint",
+  "postinstall": "prisma generate"
+},
   "dependencies": {
     "@clerk/nextjs": "^6.31.6",
     "@google/generative-ai": "^0.24.1",
