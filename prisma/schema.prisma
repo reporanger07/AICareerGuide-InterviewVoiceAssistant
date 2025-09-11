@@ -85,9 +85,7 @@ model CoverLetter {
 
 
 
-WARN! Exceeded query duration limit of 5 minutes
 
-PS C:\Users\Abdul Samad>
 
 model IndustryInsight {
   id            String    @id @default(cuid())
