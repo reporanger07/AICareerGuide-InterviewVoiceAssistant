@@ -2,13 +2,13 @@
   "name": "ai-career-coach-3",
   "version": "0.1.0",
   "private": true,
- "scripts": {
-  "dev": "cross-env NODE_OPTIONS=--inspect next dev --turbopack",
-  "build": "next build --turbopack",
-  "start": "next start",
-  "lint": "eslint",
-  "postinstall": "prisma generate"
-},
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=--inspect next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "lint": "eslint",
+    "postinstall": "prisma generate"
+  },
   "dependencies": {
     "@clerk/nextjs": "^6.31.6",
     "@google/generative-ai": "^0.24.1",
@@ -25,7 +25,9 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.13",
     "@react-pdf/renderer": "^4.3.0",
+    "@shadcn/ui": "^0.0.4",
     "@uiw/react-md-editor": "^4.0.8",
+    "@vapi-ai/web": "^2.3.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

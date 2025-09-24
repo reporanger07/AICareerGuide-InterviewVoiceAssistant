@@ -49,6 +49,8 @@ model User {
   assessments Assessment[]
   resume      Resume?
   coverLetter CoverLetter[]
+  interviews Interview[]
+
 
 }
 
@@ -117,3 +119,20 @@ model IndustryInsight {
   @@index([industry])
 }
 
+model Interview {
+  interviewId    String      @id @default(cuid())  // Unique ID to access later
+  userId         String     
+  user           User       @relation(fields: [userId], references: [id])
+  jobTitle       String?     
+  companyName    String?     
+  jobDescription String?     
+  interviewType  String?     // e.g., "Technical", "Behavioral", "HR"
+  duration       Int?        // Duration in minutes
+  questions      Json[]     // Generated interview questions
+  notes          String?     // Feedback or notes
+  score          Float?      // Optional score
+  createdAt      DateTime?   @default(now())
+  updatedAt      DateTime?   @updatedAt
+
+  @@index([userId])
+}
